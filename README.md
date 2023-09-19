@@ -1,5 +1,6 @@
 ## Hummingbird CLI
 
+[![codecov](https://codecov.io/github/Hummingbird-CLI/Hummingbird-CLI/graph/badge.svg?token=UN54CEP9GS)](https://codecov.io/github/Hummingbird-CLI/Hummingbird-CLI)
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
 
