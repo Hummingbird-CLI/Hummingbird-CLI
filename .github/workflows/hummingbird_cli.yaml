@@ -36,6 +36,11 @@ jobs:
         .*/**/*.md
       modified_files_only: false
 
+  codecov:
+    uses: codecov/codecov-action@v3
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   verify-version:
     runs-on: ubuntu-latest
     steps:
