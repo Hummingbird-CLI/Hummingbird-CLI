@@ -1,6 +1,6 @@
+import 'package:hummingbird_cli/src/command_runner.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:hummingbird_cli/src/command_runner.dart';
 import 'package:test/test.dart';
 
 class _MockLogger extends Mock implements Logger {}
