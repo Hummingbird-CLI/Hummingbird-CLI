@@ -6,6 +6,8 @@ concurrency:
 
 on:
   pull_request:
+    branches:
+      - master
     paths:
       - ".github/workflows/hummingbird_cli.yaml"
       - "lib/**"
@@ -13,7 +15,7 @@ on:
       - "pubspec.yaml"
   push:
     branches:
-      - main
+      - master
     paths:
       - ".github/workflows/hummingbird_cli.yaml"
       - "lib/**"
@@ -36,11 +38,6 @@ jobs:
         .*/**/*.md
       modified_files_only: false
 
-  codecov:
-    uses: codecov/codecov-action@v3
-    env:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
   verify-version:
     runs-on: ubuntu-latest
     steps:
@@ -58,3 +55,32 @@ jobs:
 
       - name: 🔎 Verify version
         run: dart run test --run-skipped -t version-verify
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v2
+
+      - name: 🎯 Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: "stable"
+
+      - name: 📦 Install Dependencies
+        run: |
+          dart pub get
+        
+      - name: Activate Coverage
+        run: dart pub global activate coverage 1.2.0
+      
+      - name: 🧪 Run Tests
+        run: dart run test --coverage=coverage
+      
+      - name: 📊 Collect Coverage
+        run: dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info
+      
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
