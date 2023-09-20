@@ -2,6 +2,7 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:cli_completion/cli_completion.dart';
 import 'package:hummingbird_cli/src/commands/commands.dart';
+import 'package:hummingbird_cli/src/domain/repositories/project_repository.dart';
 import 'package:hummingbird_cli/src/version.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:pub_updater/pub_updater.dart';
@@ -39,6 +40,12 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
       );
 
     // Add sub commands
+    addCommand(
+      CreateProjectCommand(
+        logger: _logger,
+        projectRepository: ProjectRepository(),
+      ),
+    );
     addCommand(SampleCommand(logger: _logger));
     addCommand(UpdateCommand(logger: _logger, pubUpdater: _pubUpdater));
   }
