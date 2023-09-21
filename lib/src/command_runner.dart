@@ -7,8 +7,13 @@ import 'package:hummingbird_cli/src/version.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:pub_updater/pub_updater.dart';
 
+/// The name of the executable.
 const executableName = 'hummingbird';
+
+/// The name of the package.
 const packageName = 'hummingbird_cli';
+
+/// The description of the package.
 const description = 'A Flutter CLI tool to kickstart new projects';
 
 /// {@template hummingbird_cli_command_runner}
