@@ -72,15 +72,15 @@ jobs:
           dart pub get
         
       - name: Activate Coverage
-        run: dart pub global activate coverage 1.2.0
+        run: dart pub global activate coverage
       
       - name: 🧪 Run Tests
-        run: dart run test --coverage=coverage
-      
-      - name: 📊 Collect Coverage
+        run: dart pub global run coverage:test_with_coverage
+
+      - name: 📊 Generate coverage report
         run: dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info
       
-      - name: Upload coverage reports to Codecov
+      - name: 📊 Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

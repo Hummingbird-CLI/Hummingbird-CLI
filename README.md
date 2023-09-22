@@ -37,6 +37,9 @@ $ hummingbird --version
 
 # Show usage help
 $ hummingbird --help
+
+# Create new app
+$ hummingbird create app
 ```
 
 ## Running Tests with coverage 🧪

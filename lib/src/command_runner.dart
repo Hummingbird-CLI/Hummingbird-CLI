@@ -2,12 +2,18 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:cli_completion/cli_completion.dart';
 import 'package:hummingbird_cli/src/commands/commands.dart';
+import 'package:hummingbird_cli/src/domain/repositories/project_repository.dart';
 import 'package:hummingbird_cli/src/version.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:pub_updater/pub_updater.dart';
 
+/// The name of the executable.
 const executableName = 'hummingbird';
+
+/// The name of the package.
 const packageName = 'hummingbird_cli';
+
+/// The description of the package.
 const description = 'A Flutter CLI tool to kickstart new projects';
 
 /// {@template hummingbird_cli_command_runner}
@@ -22,8 +28,10 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
   HummingbirdCliCommandRunner({
     Logger? logger,
     PubUpdater? pubUpdater,
+    ProjectRepository? projectRepository,
   })  : _logger = logger ?? Logger(),
         _pubUpdater = pubUpdater ?? PubUpdater(),
+        _projectRepository = projectRepository ?? ProjectRepository(),
         super(executableName, description) {
     // Add root options and flags
     argParser
@@ -39,6 +47,9 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
       );
 
     // Add sub commands
+    addCommand(
+      CreateCommand(logger: _logger, projectRepository: _projectRepository),
+    );
     addCommand(SampleCommand(logger: _logger));
     addCommand(UpdateCommand(logger: _logger, pubUpdater: _pubUpdater));
   }
@@ -48,6 +59,7 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
 
   final Logger _logger;
   final PubUpdater _pubUpdater;
+  final ProjectRepository _projectRepository;
 
   @override
   Future<int> run(Iterable<String> args) async {
