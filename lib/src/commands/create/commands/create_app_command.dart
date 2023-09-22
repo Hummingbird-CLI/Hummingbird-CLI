@@ -8,7 +8,6 @@ import 'package:mason_logger/mason_logger.dart';
 /// `hummingbird create app` command which creates a new Flutter project.
 /// {@endtemplate}
 class CreateAppCommand extends Command<int> {
-
   /// {@macro create_project_command}
   CreateAppCommand({
     required Logger logger,

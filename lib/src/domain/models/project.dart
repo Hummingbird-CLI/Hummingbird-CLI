@@ -1,7 +1,5 @@
-
 /// Project model used to create a new Flutter project.
 class Project {
-
   /// Creates a [Project].
   Project({required this.name, required this.org});
 

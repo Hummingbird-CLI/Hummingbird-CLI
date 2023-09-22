@@ -4,7 +4,6 @@ import 'package:mason_logger/mason_logger.dart';
 
 /// Allows for tunning commands from the command line
 class CommandLine {
-
   /// Runs the [command] with the given [args]
   Future<ProcessResult> run({
     required String command,
