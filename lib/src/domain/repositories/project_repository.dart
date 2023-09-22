@@ -4,8 +4,16 @@ import 'package:hummingbird_cli/src/domain/errors/command_error.dart';
 import 'package:hummingbird_cli/src/domain/models/project.dart';
 import 'package:mason_logger/mason_logger.dart';
 
+/// {@template project_repository}
 /// A repository for interacting with Flutter projects.
+/// {@endtemplate}
 class ProjectRepository {
+  /// {@macro project_repository}
+  ProjectRepository({
+    FlutterCli? flutterCli,
+  }) : _flutterCli = flutterCli ?? FlutterCli();
+
+  final FlutterCli _flutterCli;
 
   /// Gathers project information.
   /// Returns a [Project] with the gathered information.
@@ -29,19 +37,19 @@ class ProjectRepository {
     final progress = logger.progress('Creating project ${project.name}...');
 
     // Check if Flutter is installed
-    if (!(await FlutterCli.isInstalled(logger: logger))) {
+    if (!(await _flutterCli.isInstalled(logger: logger))) {
       progress.fail('Flutter is not installed');
       return Left(CommandError('Flutter is not installed'));
     }
 
     // Create Flutter project
-    try{
-      await FlutterCli.createProject(
+    try {
+      await _flutterCli.createProject(
         name: project.name,
         org: project.org,
         logger: logger,
       );
-    }catch(e){
+    } catch (e) {
       progress.fail('Failed to create project ${project.name}');
       return Left(CommandError('Failed to create project ${project.name}'));
     }

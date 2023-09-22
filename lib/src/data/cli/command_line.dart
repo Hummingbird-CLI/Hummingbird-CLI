@@ -6,7 +6,7 @@ import 'package:mason_logger/mason_logger.dart';
 class CommandLine {
 
   /// Runs the [command] with the given [args]
-  static Future<ProcessResult> run({
+  Future<ProcessResult> run({
     required String command,
     required List<String> args,
     required Logger logger,

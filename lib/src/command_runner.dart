@@ -28,8 +28,10 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
   HummingbirdCliCommandRunner({
     Logger? logger,
     PubUpdater? pubUpdater,
+    ProjectRepository? projectRepository,
   })  : _logger = logger ?? Logger(),
         _pubUpdater = pubUpdater ?? PubUpdater(),
+        _projectRepository = projectRepository ?? ProjectRepository(),
         super(executableName, description) {
     // Add root options and flags
     argParser
@@ -46,10 +48,7 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
 
     // Add sub commands
     addCommand(
-      CreateProjectCommand(
-        logger: _logger,
-        projectRepository: ProjectRepository(),
-      ),
+      CreateCommand(logger: _logger, projectRepository: _projectRepository),
     );
     addCommand(SampleCommand(logger: _logger));
     addCommand(UpdateCommand(logger: _logger, pubUpdater: _pubUpdater));
@@ -60,6 +59,7 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
 
   final Logger _logger;
   final PubUpdater _pubUpdater;
+  final ProjectRepository _projectRepository;
 
   @override
   Future<int> run(Iterable<String> args) async {

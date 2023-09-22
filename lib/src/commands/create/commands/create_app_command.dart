@@ -5,12 +5,12 @@ import 'package:hummingbird_cli/src/domain/repositories/project_repository.dart'
 import 'package:mason_logger/mason_logger.dart';
 
 /// {@template create_project_command}
-/// `hummingbird create:project` command which creates a new Flutter project.
+/// `hummingbird create app` command which creates a new Flutter project.
 /// {@endtemplate}
-class CreateProjectCommand extends Command<int> {
+class CreateAppCommand extends Command<int> {
 
   /// {@macro create_project_command}
-  CreateProjectCommand({
+  CreateAppCommand({
     required Logger logger,
     required ProjectRepository projectRepository,
   })  : _logger = logger,
@@ -20,10 +20,10 @@ class CreateProjectCommand extends Command<int> {
   final ProjectRepository _projectRepository;
 
   @override
-  String get description => 'Creates a new Flutter project.';
+  String get description => 'Creates a new Flutter app project.';
 
   @override
-  String get name => 'create:project';
+  String get name => 'app';
 
   @override
   FutureOr<int>? run() async {
