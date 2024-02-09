@@ -26,7 +26,12 @@ class ProjectRepository {
       'What is your organization name?',
       defaultValue: 'com.hummingbird',
     );
-    return Project(name: name, org: org);
+    final stateManagement = logger.chooseOne(
+      'Choose a state management solution:',
+      choices: ['BLoC', 'Provider', 'Riverpod'],
+      defaultValue: 'BLoC',
+    );
+    return Project(name: name, org: org, stateManagement: stateManagement);
   }
 
   /// Uses the settings in [project] to create a Flutter project.
@@ -54,7 +59,55 @@ class ProjectRepository {
       return Left(CommandError('Failed to create project ${project.name}'));
     }
 
+    // Scaffold project based on state management choice
+    switch (project.stateManagement) {
+      case 'BLoC':
+        await scaffoldBlocProject(project, logger);
+
+      case 'Provider':
+        // Scaffold project with Provider
+        break;
+      case 'Riverpod':
+        // Scaffold project with Riverpod
+        break;
+    }
+
     progress.complete('Created project ${project.name}');
     return const Right(null);
+  }
+
+  Future<void> scaffoldBlocProject(Project project, Logger logger) async {
+    logger.info('Scaffolding BLoC project...');
+
+    await _flutterCli.addDependencies(
+      projectName: project.name,
+      dependencies: {
+        'flutter_bloc': '^8.1.3',
+        'bloc': '^8.1.2',
+      },
+      devDependencies: {
+        'bloc_test': '^9.1.5',
+      },
+      logger: logger,
+    );
+    // TODO (benlrichards): Dynamically generate the BLoC files and structure based on the architecture chosen.
+    // Generate BLoC files and structure
+    // Any other BLoC specific setup
+  }
+
+  Future<void> scaffoldProviderProject(Project project, Logger logger) async {
+    // Example steps for scaffolding a Provider project
+    logger.info('Scaffolding Provider project...');
+    // Add Provider dependencies to pubspec.yaml
+    // Generate Provider files and structure
+    // Any other Provider specific setup
+  }
+
+  Future<void> scaffoldRiverpodProject(Project project, Logger logger) async {
+    // Example steps for scaffolding a Riverpod project
+    logger.info('Scaffolding Riverpod project...');
+    // Add Riverpod dependencies to pubspec.yaml
+    // Generate Riverpod files and structure
+    // Any other Riverpod specific setup
   }
 }
