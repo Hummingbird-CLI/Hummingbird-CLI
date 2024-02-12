@@ -5,6 +5,8 @@ class Project {
     required this.name,
     required this.org,
     required this.stateManagement,
+    required this.useHydratedBloc,
+    required this.useReplayBloc,
   });
 
   /// The name of the project.
@@ -14,5 +16,13 @@ class Project {
   final String org;
 
   /// The state management solution for the project.
-  final String stateManagement;
+  final StateManagement stateManagement;
+
+  /// Whether to use hydrated_bloc.
+  final bool? useHydratedBloc;
+
+  /// Whether to use replay_bloc.
+  final bool? useReplayBloc;
 }
+
+enum StateManagement { bloc, provider, riverpod }

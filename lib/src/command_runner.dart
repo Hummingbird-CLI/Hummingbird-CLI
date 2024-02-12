@@ -2,6 +2,7 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:cli_completion/cli_completion.dart';
 import 'package:hummingbird_cli/src/commands/commands.dart';
+import 'package:hummingbird_cli/src/domain/repositories/dependency_repository.dart';
 import 'package:hummingbird_cli/src/domain/repositories/project_repository.dart';
 import 'package:hummingbird_cli/src/version.dart';
 import 'package:mason_logger/mason_logger.dart';
@@ -29,8 +30,11 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
     Logger? logger,
     PubUpdater? pubUpdater,
     ProjectRepository? projectRepository,
+    DependencyRepository? dependencyRespository,
   })  : _logger = logger ?? Logger(),
         _pubUpdater = pubUpdater ?? PubUpdater(),
+        _dependencyRespository =
+            dependencyRespository ?? DependencyRepository(),
         _projectRepository = projectRepository ?? ProjectRepository(),
         super(executableName, description) {
     // Add root options and flags
@@ -48,7 +52,11 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
 
     // Add sub commands
     addCommand(
-      CreateCommand(logger: _logger, projectRepository: _projectRepository),
+      CreateCommand(
+        logger: _logger,
+        projectRepository: _projectRepository,
+        dependencyRespository: _dependencyRespository,
+      ),
     );
     addCommand(SampleCommand(logger: _logger));
     addCommand(UpdateCommand(logger: _logger, pubUpdater: _pubUpdater));
@@ -60,6 +68,7 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
   final Logger _logger;
   final PubUpdater _pubUpdater;
   final ProjectRepository _projectRepository;
+  final DependencyRepository _dependencyRespository;
 
   @override
   Future<int> run(Iterable<String> args) async {

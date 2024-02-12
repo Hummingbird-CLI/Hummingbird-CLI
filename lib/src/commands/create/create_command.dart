@@ -1,5 +1,6 @@
 import 'package:args/command_runner.dart';
 import 'package:hummingbird_cli/src/commands/create/commands/create_app_command.dart';
+import 'package:hummingbird_cli/src/domain/repositories/dependency_repository.dart';
 import 'package:hummingbird_cli/src/domain/repositories/project_repository.dart';
 import 'package:mason_logger/mason_logger.dart';
 
@@ -11,11 +12,13 @@ class CreateCommand extends Command<int> {
   CreateCommand({
     required Logger logger,
     required ProjectRepository projectRepository,
+    required DependencyRepository dependencyRespository,
   }) {
     addSubcommand(
       CreateAppCommand(
         logger: logger,
         projectRepository: projectRepository,
+        dependencyRespository: dependencyRespository,
       ),
     );
   }

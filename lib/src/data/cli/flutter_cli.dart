@@ -53,7 +53,8 @@ class FlutterCli {
     required Map<String, String> devDependencies,
     required Logger logger,
   }) async {
-    // TODO (benlrichards): We need to determine a way to dynamically update the versions for the dependencies
+    // ignore: lines_longer_than_80_chars
+    // TODO(benlrichards): We need to determine a way to dynamically update the versions for the dependencies
     final progress = logger.progress('Adding dependencies to $projectName...');
     try {
       final pubspecPath = '$projectName/pubspec.yaml';
