@@ -7,6 +7,7 @@ class Project {
     required this.stateManagement,
     required this.useHydratedBloc,
     required this.useReplayBloc,
+    required this.architecture,
   });
 
   /// The name of the project.
@@ -23,6 +24,11 @@ class Project {
 
   /// Whether to use replay_bloc.
   final bool? useReplayBloc;
+
+  /// The architecture of the project.
+  final Architecture architecture;
 }
 
 enum StateManagement { bloc, provider, riverpod }
+
+enum Architecture { clean, featureBased }

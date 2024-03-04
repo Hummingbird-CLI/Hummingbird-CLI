@@ -14,6 +14,7 @@ class DependencyRepository {
     required Project project,
     required Logger logger,
   }) async {
+    await _addFileGenerationDependencies(project: project, logger: logger);
     switch (project.stateManagement) {
       case StateManagement.bloc:
         await _addBlocDependencies(project: project, logger: logger);
@@ -24,32 +25,59 @@ class DependencyRepository {
     }
   }
 
+  Future<void> _addFileGenerationDependencies({
+    required Project project,
+    required Logger logger,
+  }) async {
+    logger.info('Adding file generation dependencies...');
+
+    final fileGenerationDependencies = [
+      'freezed',
+      'freezed_annotation',
+      'json_annotation',
+      'json_serializable',
+      'build_runner',
+    ];
+
+    final fileGenerationDevDependencies = [
+      'build_runner',
+    ];
+
+    await _flutterCli.addDependencies(
+      projectName: project.name,
+      dependencies: _mapDependenciesWithVersions(fileGenerationDependencies),
+      devDependencies:
+          _mapDependenciesWithVersions(fileGenerationDevDependencies),
+      logger: logger,
+    );
+  }
+
   Future<void> _addBlocDependencies({
     required Project project,
     required Logger logger,
   }) async {
     logger.info('Adding BLoC dependencies...');
-    final dependencies = {
-      'flutter_bloc': '^8.1.3',
-      'bloc': '^8.1.2',
-    };
-    final devDependencies = {
-      'bloc_test': '^9.1.5',
-    };
+
+    final dependencies = [
+      'flutter_bloc',
+      'bloc',
+    ];
+    final devDependencies = ['bloc_test'];
 
     if (project.useHydratedBloc ?? false) {
-      dependencies['hydrated_bloc'] = '^8.0.0';
-      devDependencies['mocktail'] = '^0.2.0';
+      dependencies.add('hydrated_bloc');
+      devDependencies.add('mocktail');
     }
 
     if (project.useReplayBloc ?? false) {
-      dependencies['replay_bloc'] = '^8.0.0';
+      dependencies.add('replay_bloc');
+      devDependencies.add('mocktail');
     }
 
     await _flutterCli.addDependencies(
       projectName: project.name,
-      dependencies: dependencies,
-      devDependencies: devDependencies,
+      dependencies: _mapDependenciesWithVersions(dependencies),
+      devDependencies: _mapDependenciesWithVersions(devDependencies),
       logger: logger,
     );
   }
@@ -59,7 +87,18 @@ class DependencyRepository {
     required Logger logger,
   }) async {
     logger.info('Adding Provider dependencies...');
-    //TODO(benlrichards): Add Provider dependencies
+    final dependencies = [
+      'provider',
+    ];
+    final devDependencies = [
+      'mocktail',
+    ];
+    await _flutterCli.addDependencies(
+      projectName: project.name,
+      dependencies: _mapDependenciesWithVersions(dependencies),
+      devDependencies: _mapDependenciesWithVersions(devDependencies),
+      logger: logger,
+    );
   }
 
   Future<void> _addRiverpodDependencies({
@@ -67,6 +106,43 @@ class DependencyRepository {
     required Logger logger,
   }) async {
     logger.info('Adding Riverpod dependencies...');
-    //TODO(benlrichards): Add Riverpod dependencies
+    final dependencies = [
+      'flutter_riverpod',
+    ];
+
+    final devDependencies = [
+      'mocktail',
+    ];
+
+    await _flutterCli.addDependencies(
+      projectName: project.name,
+      dependencies: _mapDependenciesWithVersions(dependencies),
+      devDependencies: _mapDependenciesWithVersions(devDependencies),
+      logger: logger,
+    );
   }
+
+  Map<String, String> _mapDependenciesWithVersions(List<String> dependencies) {
+    final depWithVersions = <String, String>{};
+
+    for (final dep in dependencies) {
+      depWithVersions[dep] = _dependencies[dep]!;
+    }
+
+    return depWithVersions;
+  }
+
+  Map<String, String> get _dependencies => {
+        'build_runner': '^2.4.4',
+        'bloc_test': '^9.1.5',
+        'bloc': '^8.1.2',
+        'flutter_bloc': '^8.1.3',
+        'freezed': '^2.4.7',
+        'mocktail': '^1.0.0',
+        'freezed_annotation': '^2.4.1',
+        'json_annotation': '^4.8.1',
+        'json_serializable': '^6.7.1',
+        'provider': '^6.1.2',
+        'flutter_riverpod': '^2.4.10',
+      };
 }

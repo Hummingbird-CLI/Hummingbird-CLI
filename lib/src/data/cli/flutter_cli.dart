@@ -46,6 +46,60 @@ class FlutterCli {
     );
   }
 
+  /// Creates a directory at the given [path].
+  /// If the directory already exists, this method does nothing.
+  Future<void> createDirectory(String path) async {
+    final directory = Directory(path);
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
+    }
+  }
+
+  /// Creates a file at the given [path] with the optional [content].
+  /// If the file already exists, it will be overwritten.
+  Future<void> createFile(String path, {String? content}) async {
+    final file = File(path);
+    await file.create(recursive: true); // Ensure the directory structure exists
+    if (content != null) {
+      await file.writeAsString(content);
+    }
+  }
+
+  // Future<void> addDependencies({
+  //   required String projectName,
+  //   required List<String> dependencies,
+  //   required List<String> devDependencies,
+  //   required Logger logger,
+  // }) async {
+  //   final originalDirectory = Directory.current;
+  //   Directory.current = projectName;
+  //   for (final dependency in dependencies) {
+  //     await _commandLine.run(
+  //       command: 'flutter',
+  //       args: [
+  //         'pub',
+  //         'add',
+  //         dependency,
+  //       ],
+  //       logger: logger,
+  //     );
+  //   }
+
+  //   for (final dependency in devDependencies) {
+  //     await _commandLine.run(
+  //       command: 'flutter',
+  //       args: [
+  //         'pub',
+  //         'add',
+  //         '--dev',
+  //         dependency,
+  //       ],
+  //       logger: logger,
+  //     );
+  //   }
+  //   Directory.current = originalDirectory;
+  // }
+
   /// Adds dependencies to the pubspec.yaml of a Flutter project.
   Future<void> addDependencies({
     required String projectName,
@@ -53,19 +107,15 @@ class FlutterCli {
     required Map<String, String> devDependencies,
     required Logger logger,
   }) async {
-    // ignore: lines_longer_than_80_chars
-    // TODO(benlrichards): We need to determine a way to dynamically update the versions for the dependencies
     final progress = logger.progress('Adding dependencies to $projectName...');
     try {
       final pubspecPath = '$projectName/pubspec.yaml';
-      final pubspecContents = await File(pubspecPath).readAsString();
 
       final updatedPubspecContents = _updatePubspecContents(
-        pubspecContents: pubspecContents,
+        pubspecContents: await File(pubspecPath).readAsString(),
         dependencies: dependencies,
         devDependencies: devDependencies,
       );
-
       await File(pubspecPath).writeAsString(updatedPubspecContents);
       progress.complete('Added dependencies to $projectName');
     } catch (e) {

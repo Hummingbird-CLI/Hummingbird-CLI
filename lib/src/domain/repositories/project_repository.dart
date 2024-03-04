@@ -44,11 +44,34 @@ class ProjectRepository {
         }
       },
     );
-    final useHydratedBloc = logger.confirm(
-      'Do you want to use hydrated_bloc?',
-    );
-    final useReplayBloc = logger.confirm(
-      'Do you want to use replay_bloc?',
+
+    bool? useHydratedBloc;
+    bool? useReplayBloc;
+
+    if (stateManagement == StateManagement.bloc) {
+      useHydratedBloc = logger.confirm(
+        'Do you want to use hydrated_bloc?',
+      );
+      useReplayBloc = logger.confirm(
+        'Do you want to use replay_bloc?',
+      );
+    }
+
+    final architecture = logger.chooseOne<Architecture>(
+      'Choose a project architecture:',
+      choices: [
+        // TODO(benlrichards): Uncomment below to enable clean architecture choice
+        // Architecture.clean,
+        Architecture.featureBased,
+      ],
+      display: (choice) {
+        switch (choice) {
+          case Architecture.clean:
+            return 'Clean';
+          case Architecture.featureBased:
+            return 'Feature-Based';
+        }
+      },
     );
     return Project(
       name: name,
@@ -56,6 +79,7 @@ class ProjectRepository {
       stateManagement: stateManagement,
       useHydratedBloc: useHydratedBloc,
       useReplayBloc: useReplayBloc,
+      architecture: architecture,
     );
   }
 
