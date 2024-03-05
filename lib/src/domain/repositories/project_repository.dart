@@ -26,7 +26,60 @@ class ProjectRepository {
       'What is your organization name?',
       defaultValue: 'com.hummingbird',
     );
-    return Project(name: name, org: org);
+    final stateManagement = logger.chooseOne<StateManagement>(
+      'Choose a state management solution:',
+      choices: [
+        StateManagement.bloc,
+        StateManagement.provider,
+        StateManagement.riverpod,
+      ],
+      display: (choice) {
+        switch (choice) {
+          case StateManagement.bloc:
+            return 'BLoC';
+          case StateManagement.provider:
+            return 'Provider';
+          case StateManagement.riverpod:
+            return 'Riverpod';
+        }
+      },
+    );
+
+    bool? useHydratedBloc;
+    bool? useReplayBloc;
+
+    if (stateManagement == StateManagement.bloc) {
+      useHydratedBloc = logger.confirm(
+        'Do you want to use hydrated_bloc?',
+      );
+      useReplayBloc = logger.confirm(
+        'Do you want to use replay_bloc?',
+      );
+    }
+
+    final architecture = logger.chooseOne<Architecture>(
+      'Choose a project architecture:',
+      choices: [
+        Architecture.clean,
+        Architecture.featureBased,
+      ],
+      display: (choice) {
+        switch (choice) {
+          case Architecture.clean:
+            return 'Clean';
+          case Architecture.featureBased:
+            return 'Feature-Based';
+        }
+      },
+    );
+    return Project(
+      name: name,
+      org: org,
+      stateManagement: stateManagement,
+      useHydratedBloc: useHydratedBloc,
+      useReplayBloc: useReplayBloc,
+      architecture: architecture,
+    );
   }
 
   /// Uses the settings in [project] to create a Flutter project.
