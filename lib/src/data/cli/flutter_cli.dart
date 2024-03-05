@@ -96,7 +96,6 @@ class FlutterCli {
   }) {
     var newContents = pubspecContents;
 
-    // Function to check and add dependencies if not already present
     String addDependenciesIfAbsent(
       String contents,
       Map<String, String> dependencies,
