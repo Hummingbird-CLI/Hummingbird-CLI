@@ -50,8 +50,8 @@ class FlutterCli {
   /// If the directory already exists, this method does nothing.
   Future<void> createDirectory(String path) async {
     final directory = Directory(path);
-    if (!await directory.exists()) {
-      await directory.create(recursive: true);
+    if (!directory.existsSync()) {
+      directory.createSync(recursive: true);
     }
   }
 
@@ -64,41 +64,6 @@ class FlutterCli {
       await file.writeAsString(content);
     }
   }
-
-  // Future<void> addDependencies({
-  //   required String projectName,
-  //   required List<String> dependencies,
-  //   required List<String> devDependencies,
-  //   required Logger logger,
-  // }) async {
-  //   final originalDirectory = Directory.current;
-  //   Directory.current = projectName;
-  //   for (final dependency in dependencies) {
-  //     await _commandLine.run(
-  //       command: 'flutter',
-  //       args: [
-  //         'pub',
-  //         'add',
-  //         dependency,
-  //       ],
-  //       logger: logger,
-  //     );
-  //   }
-
-  //   for (final dependency in devDependencies) {
-  //     await _commandLine.run(
-  //       command: 'flutter',
-  //       args: [
-  //         'pub',
-  //         'add',
-  //         '--dev',
-  //         dependency,
-  //       ],
-  //       logger: logger,
-  //     );
-  //   }
-  //   Directory.current = originalDirectory;
-  // }
 
   /// Adds dependencies to the pubspec.yaml of a Flutter project.
   Future<void> addDependencies({
@@ -131,35 +96,50 @@ class FlutterCli {
   }) {
     var newContents = pubspecContents;
 
-    // Check and add dependencies
-    if (dependencies.isNotEmpty) {
-      final dependenciesString = dependencies.entries
-          .map((entry) => '  ${entry.key}: ${entry.value}')
-          .join('\n');
-      if (newContents.contains('dependencies:\n')) {
-        newContents = newContents.replaceFirst(
-          RegExp('(dependencies:\n)'),
-          'dependencies:\n$dependenciesString\n',
-        );
-      } else {
-        newContents += '\ndependencies:\n$dependenciesString\n';
+    // Function to check and add dependencies if not already present
+    String addDependenciesIfAbsent(
+      String contents,
+      Map<String, String> dependencies,
+      String section,
+    ) {
+      var modifiedContents = contents;
+
+      final existingDependencies = RegExp('$section:\n((?:.|\n)*)\n')
+              .firstMatch(modifiedContents)
+              ?.group(1) ??
+          '';
+      var newDependenciesString = '';
+
+      for (final entry in dependencies.entries) {
+        if (!existingDependencies.contains('${entry.key}:')) {
+          newDependenciesString += '  ${entry.key}: ${entry.value}\n';
+        }
       }
+
+      if (newDependenciesString.isNotEmpty) {
+        if (modifiedContents.contains('$section:\n')) {
+          modifiedContents = modifiedContents.replaceFirst(
+            RegExp('($section:\n)'),
+            '$section:\n$newDependenciesString',
+          );
+        } else {
+          modifiedContents += '\n$section:\n$newDependenciesString';
+        }
+      }
+
+      return modifiedContents;
     }
 
-    // Check and add dev_dependencies
-    if (devDependencies.isNotEmpty) {
-      final devDependenciesString = devDependencies.entries
-          .map((entry) => '  ${entry.key}: ${entry.value}')
-          .join('\n');
-      if (newContents.contains('dev_dependencies:\n')) {
-        newContents = newContents.replaceFirst(
-          RegExp('(dev_dependencies:\n)'),
-          'dev_dependencies:\n$devDependenciesString\n',
-        );
-      } else {
-        newContents += '\ndev_dependencies:\n$devDependenciesString\n';
-      }
-    }
+    // Check and add dependencies if not already present
+    newContents =
+        addDependenciesIfAbsent(newContents, dependencies, 'dependencies');
+
+    // Check and add dev_dependencies if not already present
+    newContents = addDependenciesIfAbsent(
+      newContents,
+      devDependencies,
+      'dev_dependencies',
+    );
 
     return newContents;
   }

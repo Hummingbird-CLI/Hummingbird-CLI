@@ -45,6 +45,7 @@ class CreateAppCommand extends Command<int> {
       project: project,
       logger: _logger,
     );
+
     return ExitCode.success.code;
   }
 }

@@ -60,8 +60,7 @@ class ProjectRepository {
     final architecture = logger.chooseOne<Architecture>(
       'Choose a project architecture:',
       choices: [
-        // TODO(benlrichards): Uncomment below to enable clean architecture choice
-        // Architecture.clean,
+        Architecture.clean,
         Architecture.featureBased,
       ],
       display: (choice) {

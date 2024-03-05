@@ -29,6 +29,26 @@ class Project {
   final Architecture architecture;
 }
 
-enum StateManagement { bloc, provider, riverpod }
+/// Defines the state management solutions available for a project.
+///
+enum StateManagement {
+  /// BLoC
+  bloc,
 
-enum Architecture { clean, featureBased }
+  /// Provider
+  provider,
+
+  /// Riverpod
+
+  riverpod
+}
+
+/// Represents the architectural patterns supported for a project.
+///
+enum Architecture {
+  /// Clean
+  clean,
+
+  /// Feature-Based
+  featureBased
+}

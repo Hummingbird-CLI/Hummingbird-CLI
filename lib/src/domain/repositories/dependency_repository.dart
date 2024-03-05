@@ -2,6 +2,10 @@ import 'package:hummingbird_cli/src/data/cli/flutter_cli.dart';
 import 'package:hummingbird_cli/src/domain/models/project.dart';
 import 'package:mason_logger/mason_logger.dart';
 
+/// A repository that manages the dependencies for a Flutter project.
+///
+/// This repository is responsible for adding, updating, and removing
+/// dependencies in a project's pubspec.yaml file.
 class DependencyRepository {
   /// {@macro project_repository}
   DependencyRepository({
@@ -10,6 +14,14 @@ class DependencyRepository {
 
   final FlutterCli _flutterCli;
 
+  /// Adds state management dependencies to the given [project].
+  ///
+  /// This method determines the state management solution specified in
+  /// [project] and adds the necessary dependencies for it. It also adds
+  /// file generation dependencies common to all state management solutions.
+  ///
+  /// [project]: The project to which dependencies are added.
+  /// [logger]: Used to log the progress of adding dependencies.
   Future<void> addStateManagementDependencies({
     required Project project,
     required Logger logger,
@@ -144,5 +156,7 @@ class DependencyRepository {
         'json_serializable': '^6.7.1',
         'provider': '^6.1.2',
         'flutter_riverpod': '^2.4.10',
+        'hydrated_bloc': '^9.1.4',
+        'replay_bloc': '^0.2.6',
       };
 }
