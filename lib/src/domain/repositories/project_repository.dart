@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:hummingbird_cli/src/data/cli/flutter_cli.dart';
 import 'package:hummingbird_cli/src/domain/errors/command_error.dart';
+import 'package:hummingbird_cli/src/domain/models/flavor.dart';
 import 'package:hummingbird_cli/src/domain/models/project.dart';
+import 'package:hummingbird_cli/src/extensions/string_extensions.dart';
 import 'package:mason_logger/mason_logger.dart';
 
 /// {@template project_repository}
@@ -22,6 +24,7 @@ class ProjectRepository {
       'What is the name of your project?',
       defaultValue: 'my_project',
     );
+    final appName = name.titleCaseFromSnakeCase();
     final org = logger.prompt(
       'What is your organization name?',
       defaultValue: 'com.hummingbird',
@@ -30,20 +33,29 @@ class ProjectRepository {
       'Choose a state management solution:',
       choices: [
         StateManagement.bloc,
-        StateManagement.provider,
-        StateManagement.riverpod,
       ],
       display: (choice) {
         switch (choice) {
           case StateManagement.bloc:
             return 'BLoC';
-          case StateManagement.provider:
-            return 'Provider';
-          case StateManagement.riverpod:
-            return 'Riverpod';
         }
       },
     );
+
+    List<Flavor>? flavors = [];
+    var addMore = logger.confirm('Do you want to add flavors?');
+
+    while (addMore) {
+      final flavorName = logger.prompt('Enter a flavor name:');
+      final flavorSuffix = logger.prompt(
+        'Enter a flavor suffix (e.g. stg for staging):',
+      );
+      flavors.add(Flavor(name: flavorName, suffix: flavorSuffix));
+      addMore = logger.confirm('Do you want to add another flavor?');
+    }
+    if (flavors.isEmpty) {
+      flavors = null;
+    }
 
     bool? useHydratedBloc;
     bool? useReplayBloc;
@@ -74,7 +86,9 @@ class ProjectRepository {
     );
     return Project(
       name: name,
+      appName: appName,
       org: org,
+      flavors: flavors,
       stateManagement: stateManagement,
       useHydratedBloc: useHydratedBloc,
       useReplayBloc: useReplayBloc,

@@ -30,10 +30,7 @@ class DependencyRepository {
     switch (project.stateManagement) {
       case StateManagement.bloc:
         await _addBlocDependencies(project: project, logger: logger);
-      case StateManagement.provider:
-        await _addProviderDependencies(project: project, logger: logger);
-      case StateManagement.riverpod:
-        await _addRiverpodDependencies(project: project, logger: logger);
+    
     }
   }
 

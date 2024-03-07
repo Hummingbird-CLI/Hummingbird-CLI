@@ -2,6 +2,7 @@ import 'package:args/command_runner.dart';
 import 'package:hummingbird_cli/src/commands/create/commands/create_app_command.dart';
 import 'package:hummingbird_cli/src/domain/repositories/architecture_repository.dart';
 import 'package:hummingbird_cli/src/domain/repositories/dependency_repository.dart';
+import 'package:hummingbird_cli/src/domain/repositories/flavors_repository.dart';
 import 'package:hummingbird_cli/src/domain/repositories/project_repository.dart';
 import 'package:mason_logger/mason_logger.dart';
 
@@ -15,6 +16,7 @@ class CreateCommand extends Command<int> {
     required ProjectRepository projectRepository,
     required DependencyRepository dependencyRespository,
     required ArchitectureRepository architectureRepository,
+    required FlavorsRepository flavorsRepository,
   }) {
     addSubcommand(
       CreateAppCommand(
@@ -22,6 +24,7 @@ class CreateCommand extends Command<int> {
         projectRepository: projectRepository,
         dependencyRespository: dependencyRespository,
         architectureRepository: architectureRepository,
+        flavorsRepository: flavorsRepository,
       ),
     );
   }

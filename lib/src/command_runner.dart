@@ -4,6 +4,7 @@ import 'package:cli_completion/cli_completion.dart';
 import 'package:hummingbird_cli/src/commands/commands.dart';
 import 'package:hummingbird_cli/src/domain/repositories/architecture_repository.dart';
 import 'package:hummingbird_cli/src/domain/repositories/dependency_repository.dart';
+import 'package:hummingbird_cli/src/domain/repositories/flavors_repository.dart';
 import 'package:hummingbird_cli/src/domain/repositories/project_repository.dart';
 import 'package:hummingbird_cli/src/version.dart';
 import 'package:mason_logger/mason_logger.dart';
@@ -33,6 +34,7 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
     ProjectRepository? projectRepository,
     DependencyRepository? dependencyRespository,
     ArchitectureRepository? architectureRepository,
+    FlavorsRepository? flavorsRepository,
   })  : _logger = logger ?? Logger(),
         _pubUpdater = pubUpdater ?? PubUpdater(),
         _dependencyRespository =
@@ -40,6 +42,7 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
         _projectRepository = projectRepository ?? ProjectRepository(),
         _architectureRepository =
             architectureRepository ?? ArchitectureRepository(),
+        _flavorsRepository = flavorsRepository ?? FlavorsRepository(),
         super(executableName, description) {
     // Add root options and flags
     argParser
@@ -61,6 +64,7 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
         projectRepository: _projectRepository,
         dependencyRespository: _dependencyRespository,
         architectureRepository: _architectureRepository,
+        flavorsRepository: _flavorsRepository,
       ),
     );
     addCommand(SampleCommand(logger: _logger));
@@ -75,6 +79,7 @@ class HummingbirdCliCommandRunner extends CompletionCommandRunner<int> {
   final ProjectRepository _projectRepository;
   final DependencyRepository _dependencyRespository;
   final ArchitectureRepository _architectureRepository;
+  final FlavorsRepository _flavorsRepository;
 
   @override
   Future<int> run(Iterable<String> args) async {

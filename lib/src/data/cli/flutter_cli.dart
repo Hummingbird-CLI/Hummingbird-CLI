@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:hummingbird_cli/src/data/cli/command_line.dart';
+import 'package:hummingbird_cli/src/domain/models/project.dart';
 import 'package:mason_logger/mason_logger.dart';
 
 /// {@template flutter_cli}
@@ -62,6 +63,13 @@ class FlutterCli {
     await file.create(recursive: true); // Ensure the directory structure exists
     if (content != null) {
       await file.writeAsString(content);
+    }
+  }
+
+  Future<void> deleteFile(String path) async {
+    final file = File(path);
+    if (file.existsSync()) {
+      file.deleteSync();
     }
   }
 
@@ -142,4 +150,6 @@ class FlutterCli {
 
     return newContents;
   }
+
+  
 }

@@ -21,10 +21,6 @@ class ArchitectureRepository {
     switch (project.stateManagement) {
       case StateManagement.bloc:
         await _scaffoldBlocProject(project, logger);
-      case StateManagement.provider:
-        await _scaffoldProviderProject(project, logger);
-      case StateManagement.riverpod:
-        await _scaffoldRiverpodProject(project, logger);
     }
   }
 
@@ -84,21 +80,22 @@ class ArchitectureRepository {
         pathToCubit: '../cubit/${featureName}_cubit.dart',
       ),
     );
+    logger.progress(
+      // ignore: lines_longer_than_80_chars
+      'Feature-based BLoC structure for $featureName app generated successfully.',
+    );
 
-    logger
-      ..progress(
-        // ignore: lines_longer_than_80_chars
-        'Feature-based BLoC structure for $featureName app generated successfully.',
-      )
-      ..progress(
+    if (project.flavors == null) {
+      logger.progress(
         'Updating main.dart with $featureName page...',
       );
-    await _scaffoldMainDotDart(
-      basePath: '${project.name}/lib',
-      counterPagePath:
-          'presentation/$featureName/views/${featureName}_page.dart',
-    );
-    logger.progress('main.dart updated successfully.');
+      await _scaffoldMainDotDart(
+        basePath: '${project.name}/lib',
+        counterPagePath:
+            'presentation/$featureName/views/${featureName}_page.dart',
+      );
+      logger.progress('main.dart updated successfully.');
+    }
   }
 
   /// Scaffolds a BLoC project with clean architecture for a given [project],
